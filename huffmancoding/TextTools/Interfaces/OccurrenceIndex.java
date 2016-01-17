@@ -16,26 +16,26 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package huffmancoding;
-
-import huffmancoding.TextTools.CharacterOccurrence;
-import huffmancoding.TextTools.OccurrenceCounter;
+package huffmancoding.TextTools.Interfaces;
 
 /**
+ * Interface for classes that are needed for storing character occurrency.
  *
  * @author cezary
  */
-public class Main {
+public interface OccurrenceIndex {
 
     /**
-     * @param args the command line arguments
+     * Return the character we store the occurrence.
+     *
+     * @return a char
      */
-    public static void main(String[] args) {
-        OccurrenceCounter c = new OccurrenceCounter("Ala ma kota, a kot ma AIDS");
-        CharacterOccurrence[] o = c.getFullOccurrence();
-        for(CharacterOccurrence e : o) {
-            System.out.println(e.getCharacter() + " - " + e.getOccurence());
-        }
-    }
+    public char getCharacter();
 
+    /**
+     * Return the occurrence of the stored char.
+     *
+     * @return a double representing frequency
+     */
+    public double getOccurence();
 }
