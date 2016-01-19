@@ -64,6 +64,7 @@ public class HuffmanNode {
     }
 
     public OccurrenceIndex value;
+    public String id;
 
     private HuffmanNode[] nodes = new HuffmanNode[2];
 }

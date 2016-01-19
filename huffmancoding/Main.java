@@ -43,7 +43,8 @@ public class Main {
             System.out.println(e.getCharacter() + " - " + e.getOccurrence());
         }
 
-        System.out.println(tree.root.getNode(1).value.getOccurrence());
+        tree.updateIDs(tree.root, "0");
+        
     }
 
 }

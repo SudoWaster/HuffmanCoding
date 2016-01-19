@@ -94,6 +94,21 @@ public class HuffmanTree {
                     || hasNullNodes(node.getNode(NODE.RIGHT.getValue())));
         }
     }
+
+    public void updateIDs(HuffmanNode node, String id) {
+        
+        node.id = id;
+
+        System.out.println(node.value.getCharacter() + " " + node.value.getOccurrence() + " " + node.id);
+        
+        if(node.getNode(NODE.LEFT.getValue()) != null) {
+            updateIDs(node.getNode(NODE.LEFT.getValue()), id + NODE.LEFT.getValue());
+        }
+
+        if(node.getNode(NODE.RIGHT.getValue()) != null) {
+            updateIDs(node.getNode(NODE.LEFT.getValue()), id + NODE.RIGHT.getValue());
+        }
+    }
     
     public HuffmanNode root;
 }
