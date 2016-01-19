@@ -19,6 +19,7 @@
 package huffmancoding;
 
 import huffmancoding.TextTools.CharacterOccurrence;
+import huffmancoding.TextTools.Occurrence;
 import huffmancoding.TextTools.OccurrenceCounter;
 
 /**
@@ -33,6 +34,7 @@ public class Main {
     public static void main(String[] args) {
         OccurrenceCounter c = new OccurrenceCounter("Ala ma kota, a kot ma AIDS");
         CharacterOccurrence[] o = c.getFullOccurrence();
+        Occurrence.sort(o);
         for(CharacterOccurrence e : o) {
             System.out.println(e.getCharacter() + " - " + e.getOccurence());
         }
