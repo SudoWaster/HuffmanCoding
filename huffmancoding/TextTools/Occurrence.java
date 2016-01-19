@@ -39,7 +39,7 @@ public class Occurrence {
         double[] frequencies = new double[occurrence.length];
 
         for(int i = 0; i < frequencies.length; i++) {
-            frequencies[i] = occurrence[i].getOccurence();
+            frequencies[i] = occurrence[i].getOccurrence();
         }
 
         //
@@ -60,7 +60,7 @@ public class Occurrence {
 
             for(int j = 0; j < temp.size(); j++) {
 
-                if(temp.get(j).getOccurence() == frequencies[i]) {
+                if(temp.get(j).getOccurrence() == frequencies[i]) {
                     //
                     // If the CharacterOccurrence is matched, put it on its
                     // place and remove from the source array to prevent
