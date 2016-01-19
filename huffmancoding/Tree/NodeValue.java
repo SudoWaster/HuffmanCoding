@@ -16,46 +16,28 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package huffmancoding.TextTools;
+package huffmancoding.Tree;
 
 import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
 
 /**
- * A class used for storing occurrence frequency of a character.
- * An implementation of huffmanencoding.TextTools.Interfaces.OccurrenceIndex
+ * OccurrenceIndex implementation used just for storing current node value
  *
  * @author cezary
  */
-public class CharacterOccurrence implements OccurrenceIndex {
+public class NodeValue implements OccurrenceIndex {
 
-    public CharacterOccurrence(char character, double frequency) {
-        //
-        // Init fields needed for implementation
-        //
-        the_character = character;
-        the_occurrence = frequency;
+    public NodeValue(double value) {
+        this.value = value;
     }
 
-    /**
-     * Returns the character.
-     * @return a char
-     */
     public char getCharacter() {
-        return the_character;
+        return '\0';
     }
 
-    /**
-     * Returns frequency of the character.
-     *
-     * @return the double occurrence of the char
-     */
     public double getOccurrence() {
-        return the_occurrence;
+        return value;
     }
 
-    //
-    // Fields for methods implementation.
-    //
-    private char the_character;
-    private double the_occurrence;
+    public double value = 0;
 }

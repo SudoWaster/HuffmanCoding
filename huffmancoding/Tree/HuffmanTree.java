@@ -16,26 +16,41 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package huffmancoding.TextTools.Interfaces;
+package huffmancoding.Tree;
+
+import huffmancoding.TextTools.CharacterOccurrence;
 
 /**
- * Interface for classes that are needed for storing character occurrency.
+ * A simple Huffman tree representation.
  *
  * @author cezary
  */
-public interface OccurrenceIndex {
+public class HuffmanTree {
 
-    /**
-     * Return the character we store the occurrence.
-     *
-     * @return a char
-     */
-    public char getCharacter();
+    public static enum NODE {
+        LEFT(0), RIGHT(1);
 
-    /**
-     * Return the occurrence of the stored char.
-     *
-     * @return a double representing frequency
-     */
-    public double getOccurrence();
+        private final int value;
+        private NODE(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public HuffmanTree() {
+        this.root = new HuffmanNode();
+    }
+
+    public void insert(CharacterOccurrence element) {
+        HuffmanNode node = root;
+        HuffmanNode parent = null;
+        while(node != null && element.getOccurence() < node.value.getOccurence()) {
+
+        }
+    }
+    
+    private HuffmanNode root;
 }
