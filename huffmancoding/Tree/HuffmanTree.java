@@ -45,12 +45,55 @@ public class HuffmanTree {
     }
 
     public void insert(CharacterOccurrence element) {
-        HuffmanNode node = root;
-        HuffmanNode parent = null;
-        while(node != null && element.getOccurence() < node.value.getOccurence()) {
+        HuffmanNode newNode = new HuffmanNode(element);
 
+        if(root.isLeaf()) {
+            root.setNode(NODE.LEFT.getValue(), newNode);
+        } else if(hasNullNodes(root)) {
+            seekAndInject(root, newNode);
+        } else {
+            HuffmanNode theNewRoot = new HuffmanNode();
+            theNewRoot.setNode(NODE.LEFT.getValue(), root);
+            if(element.getOccurrence() > root.value.getOccurrence()) {
+                theNewRoot.setNode(NODE.RIGHT.getValue(), newNode);
+            } else {
+                HuffmanNode theParallel = new HuffmanNode();
+                theParallel.setNode(NODE.LEFT.getValue(), newNode);
+                theNewRoot.setNode(NODE.RIGHT.getValue(), theParallel);
+            }
+            root = theNewRoot;
+        }
+    }
+
+    private void seekAndInject(HuffmanNode node, HuffmanNode element) {
+        HuffmanNode temp = node;
+        HuffmanNode parent = null;
+        int nodeSide = 0;
+        
+        while(hasNullNodes(temp) && (temp != null)) {
+            parent = temp;
+            if(hasNullNodes(temp.getNode(NODE.LEFT.getValue()))) {
+                temp = temp.getNode(NODE.LEFT.getValue());
+                nodeSide = 0;
+            } else {
+                temp = temp.getNode(NODE.RIGHT.getValue());
+                nodeSide = 1;
+            }
+        }
+
+        parent.setNode(nodeSide, element);
+    }
+
+    public boolean hasNullNodes(HuffmanNode node) {
+        if(node == null) {
+            return true;
+        } else if(node.isLeaf()) {
+            return false;
+        } else {
+            return (hasNullNodes(node.getNode(NODE.LEFT.getValue()))
+                    || hasNullNodes(node.getNode(NODE.RIGHT.getValue())));
         }
     }
     
-    private HuffmanNode root;
+    public HuffmanNode root;
 }

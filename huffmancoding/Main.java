@@ -21,6 +21,7 @@ package huffmancoding;
 import huffmancoding.TextTools.CharacterOccurrence;
 import huffmancoding.TextTools.Occurrence;
 import huffmancoding.TextTools.OccurrenceCounter;
+import huffmancoding.Tree.HuffmanTree;
 
 /**
  *
@@ -35,9 +36,14 @@ public class Main {
         OccurrenceCounter c = new OccurrenceCounter("Ala ma kota, a kot ma AIDS");
         CharacterOccurrence[] o = c.getFullOccurrence();
         Occurrence.sort(o);
+        HuffmanTree tree = new HuffmanTree();
+        
         for(CharacterOccurrence e : o) {
-            System.out.println(e.getCharacter() + " - " + e.getOccurence());
+            tree.insert(e);
+            System.out.println(e.getCharacter() + " - " + e.getOccurrence());
         }
+
+        System.out.println(tree.root.getNode(1).value.getOccurrence());
     }
 
 }
