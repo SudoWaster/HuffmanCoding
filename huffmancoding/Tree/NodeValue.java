@@ -27,17 +27,35 @@ import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
  */
 public class NodeValue implements OccurrenceIndex {
 
+    /**
+     * Create a NodeValue (with a value)
+     *
+     * @param value a double - value of the node
+     */
     public NodeValue(double value) {
         this.value = value;
     }
 
+    /**
+     * Return dummy character - we don't need this.
+     *
+     * @return null char
+     */
     public char getCharacter() {
         return '\0';
     }
 
+    /**
+     * Return node value
+     *
+     * @return a double representing value
+     */
     public double getOccurrence() {
         return value;
     }
 
+    //
+    // The value of the node
+    //
     public double value = 0;
 }
