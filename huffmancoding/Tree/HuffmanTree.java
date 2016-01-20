@@ -19,6 +19,7 @@
 package huffmancoding.Tree;
 
 import huffmancoding.TextTools.CharacterOccurrence;
+import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
 
 /**
  * A simple Huffman tree representation.
@@ -172,6 +173,79 @@ public class HuffmanTree {
 
 
     /**
+     * Search and return CharacterOccurrence from the tree basing on a character
+     *
+     * @param character a char searched in the tree
+     * @return a corresponding CharacterOccurrence
+     */
+    public CharacterOccurrence get(char character) {
+        return (CharacterOccurrence) get(root, character, "");
+    }
+
+    /**
+     * Search and return CharacterOccurrence from the tree basing on the id
+     *
+     * @param id a String id searched in the tree
+     * @return a corresponding CharacterOccurrence
+     */
+    public CharacterOccurrence get(String id) {
+        return (CharacterOccurrence) get(root, '\0', id);
+    }
+
+    /**
+     * Search for an OccurrenceIndex in a node using a character and id.
+     *
+     * @param node a start HuffmanNode
+     * @param character a char being searched
+     * @param id a String id being searched
+     * @return a corresponding CharacterOccurrence
+     */
+    public OccurrenceIndex get(HuffmanNode node, char character, String id) {
+        //
+        // Search in the exsistent nodes
+        //
+        if(node != null) {
+
+            if(!node.isLeaf()) {
+                //
+                // If not a leaf, search deeper.
+                //
+                OccurrenceIndex result = get(node.getNode(NODE.LEFT.getValue()),
+                        character, id);
+
+                if(result == null) {
+                    //
+                    // If a left node search result is null, search right node
+                    //
+                    return get(node.getNode(NODE.RIGHT.getValue()), character,
+                            id);
+
+                } else {
+                    //
+                    // If found in left node, return it
+                    //
+                    return result;
+
+                }
+
+            } else if(node.value.getCharacter() == character
+                    || node.id.equals(id)) {
+                //
+                // If found, return value
+                //
+                return node.value;
+
+            }
+        }
+
+        //
+        // If not exsistent
+        //
+        return null;
+    }
+
+
+    /**
      * Used for determining whether a node has null nodes. Excludes leaves
      * since they are not branches - they have two null nodes.
      *
@@ -184,11 +258,13 @@ public class HuffmanTree {
             // If this node is null, then there are null nodes!
             //
             return true;
+
         } else if(node.isLeaf()) {
             //
             // We don't look into leaves' nodes, because they are unused.
             //
             return false;
+
         } else {
             //
             // Go deeper.
