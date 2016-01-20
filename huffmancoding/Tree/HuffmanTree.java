@@ -46,6 +46,7 @@ public class HuffmanTree {
 
     public void insert(CharacterOccurrence element) {
         HuffmanNode newNode = new HuffmanNode(element);
+        System.out.println(newNode.value.getCharacter());
 
         if(root.isLeaf()) {
             root.setNode(NODE.LEFT.getValue(), newNode);
@@ -84,10 +85,11 @@ public class HuffmanTree {
         parent.setNode(nodeSide, element);
     }
 
-    public boolean hasNullNodes(HuffmanNode node) {
+    public static boolean hasNullNodes(HuffmanNode node) {
         if(node == null) {
             return true;
         } else if(node.isLeaf()) {
+            System.out.println(node.value.getCharacter() + " " + node.id);
             return false;
         } else {
             return (hasNullNodes(node.getNode(NODE.LEFT.getValue()))
@@ -95,18 +97,16 @@ public class HuffmanTree {
         }
     }
 
-    public void updateIDs(HuffmanNode node, String id) {
+    public static void updateIDs(HuffmanNode node, String id) {
         
         node.id = id;
 
-        System.out.println(node.value.getCharacter() + " " + node.value.getOccurrence() + " " + node.id);
-        
         if(node.getNode(NODE.LEFT.getValue()) != null) {
             updateIDs(node.getNode(NODE.LEFT.getValue()), id + NODE.LEFT.getValue());
         }
 
         if(node.getNode(NODE.RIGHT.getValue()) != null) {
-            updateIDs(node.getNode(NODE.LEFT.getValue()), id + NODE.RIGHT.getValue());
+            updateIDs(node.getNode(NODE.RIGHT.getValue()), id + NODE.RIGHT.getValue());
         }
     }
     

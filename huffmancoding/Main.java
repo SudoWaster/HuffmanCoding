@@ -41,10 +41,11 @@ public class Main {
         for(CharacterOccurrence e : o) {
             tree.insert(e);
             System.out.println(e.getCharacter() + " - " + e.getOccurrence());
+
         }
 
         tree.updateIDs(tree.root, "0");
-        
+        tree.hasNullNodes(tree.root);
     }
 
 }
