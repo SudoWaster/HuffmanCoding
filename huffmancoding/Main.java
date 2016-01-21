@@ -18,6 +18,7 @@
 
 package huffmancoding;
 
+import huffmancoding.Coders.HuffmanEncoder;
 import huffmancoding.TextTools.CharacterOccurrence;
 import huffmancoding.TextTools.Occurrence;
 import huffmancoding.TextTools.OccurrenceCounter;
@@ -49,6 +50,8 @@ public class Main {
         System.out.println(tree.get('S').getOccurrence() + " " + tree.get('S').getID());
         System.out.println(tree.get(' ').getOccurrence() + " " + tree.get(' ').getID());
         System.out.println(tree.get("0000001").getCharacter());
+
+        HuffmanEncoder e = new HuffmanEncoder("ala ma kota, a kot ma aids");
     }
 
 }

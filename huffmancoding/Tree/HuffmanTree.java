@@ -21,6 +21,7 @@ package huffmancoding.Tree;
 import huffmancoding.TextTools.CharacterOccurrence;
 import huffmancoding.TextTools.HuffmanCharacter;
 import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
+import huffmancoding.TextTools.Occurrence;
 
 /**
  * A simple Huffman tree implementation.
@@ -59,11 +60,27 @@ public class HuffmanTree {
     
     /**
      *
-     * Default and only sensible constructor.
+     * Default constructor.
      *
      */
     public HuffmanTree() {
         this.root = new HuffmanNode();
+    }
+
+    /**
+     * Constructor that also created a tree based on an array of
+     * CharacterOccurrences
+     *
+     * @param occurrences a CharacterOccurrences array
+     */
+    public HuffmanTree(CharacterOccurrence[] occurrences) {
+        this();
+
+        Occurrence.sort(occurrences);
+
+        for(CharacterOccurrence element : occurrences) {
+            insert(element);
+        }
     }
 
 
