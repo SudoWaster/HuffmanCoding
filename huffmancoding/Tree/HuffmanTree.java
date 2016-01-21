@@ -19,10 +19,11 @@
 package huffmancoding.Tree;
 
 import huffmancoding.TextTools.CharacterOccurrence;
+import huffmancoding.TextTools.HuffmanCharacter;
 import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
 
 /**
- * A simple Huffman tree representation.
+ * A simple Huffman tree implementation.
  *
  * @author cezary
  */
@@ -34,7 +35,10 @@ public class HuffmanTree {
      *
      */
     public static enum NODE {
+
+
         LEFT(0), RIGHT(1);
+
 
         //
         // Value representation
@@ -77,7 +81,7 @@ public class HuffmanTree {
 
         if(root.isLeaf()) {
             //
-            // If it's the leaf, plant the tree.
+            // If root's a leaf, plant the tree.
             //
             root.setNode(NODE.LEFT.getValue(), newNode);
 
@@ -178,8 +182,8 @@ public class HuffmanTree {
      * @param character a char searched in the tree
      * @return a corresponding CharacterOccurrence
      */
-    public CharacterOccurrence get(char character) {
-        return (CharacterOccurrence) get(root, character, "");
+    public HuffmanCharacter get(char character) {
+        return get(root, character, "");
     }
 
     /**
@@ -188,8 +192,8 @@ public class HuffmanTree {
      * @param id a String id searched in the tree
      * @return a corresponding CharacterOccurrence
      */
-    public CharacterOccurrence get(String id) {
-        return (CharacterOccurrence) get(root, '\0', id);
+    public HuffmanCharacter get(String id) {
+        return get(root, '\0', id);
     }
 
     /**
@@ -200,7 +204,13 @@ public class HuffmanTree {
      * @param id a String id being searched
      * @return a corresponding CharacterOccurrence
      */
-    public OccurrenceIndex get(HuffmanNode node, char character, String id) {
+    public HuffmanCharacter get(HuffmanNode node, char character, String id) {
+
+        //
+        // Default search results
+        //
+        HuffmanCharacter result = null;
+
         //
         // Search in the exsistent nodes
         //
@@ -210,7 +220,7 @@ public class HuffmanTree {
                 //
                 // If not a leaf, search deeper.
                 //
-                OccurrenceIndex result = get(node.getNode(NODE.LEFT.getValue()),
+                result = get(node.getNode(NODE.LEFT.getValue()),
                         character, id);
 
                 if(result == null) {
@@ -225,7 +235,6 @@ public class HuffmanTree {
                     // If found in left node, return it
                     //
                     return result;
-
                 }
 
             } else if(node.value.getCharacter() == character
@@ -233,15 +242,16 @@ public class HuffmanTree {
                 //
                 // If found, return value
                 //
-                return node.value;
 
+                result = new HuffmanCharacter(node.value);
+                result.id = node.id;
             }
         }
 
         //
-        // If not exsistent
+        // Return search results
         //
-        return null;
+        return result;
     }
 
 

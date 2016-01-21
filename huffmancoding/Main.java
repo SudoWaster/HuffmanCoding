@@ -46,8 +46,8 @@ public class Main {
         tree.updateIDs(tree.root, "0");
         tree.hasNullNodes(tree.root);
 
-        System.out.println(tree.get('S').getOccurrence());
-        System.out.println(tree.get(' ').getOccurrence());
+        System.out.println(tree.get('S').getOccurrence() + " " + tree.get('S').getID());
+        System.out.println(tree.get(' ').getOccurrence() + " " + tree.get(' ').getID());
         System.out.println(tree.get("0000001").getCharacter());
     }
 

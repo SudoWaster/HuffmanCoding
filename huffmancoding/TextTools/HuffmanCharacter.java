@@ -21,41 +21,51 @@ package huffmancoding.TextTools;
 import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
 
 /**
- * A class used for storing occurrence frequency of a character.
- * An implementation of huffmanencoding.TextTools.Interfaces.OccurrenceIndex
+ * HuffmanCharacter is a CharacterOccurrence extension allowing to use id with
+ * the character information. Used in BST search results to encode text.
  *
  * @author cezary
  */
-public class CharacterOccurrence implements OccurrenceIndex {
-
-    public CharacterOccurrence(char character, double frequency) {
-        //
-        // Init fields needed for implementation
-        //
-        the_character = character;
-        the_occurrence = frequency;
-    }
+public class HuffmanCharacter extends CharacterOccurrence {
 
     /**
-     * Returns the character.
-     * @return a char
-     */
-    public char getCharacter() {
-        return the_character;
-    }
-
-    /**
-     * Returns frequency of the character.
+     * Create from an existing CharacterOccurrence
      *
-     * @return the double occurrence of the char
+     * @param occurrence a CharacterOccurrence to extend
      */
-    public double getOccurrence() {
-        return the_occurrence;
+    public HuffmanCharacter(OccurrenceIndex occurrence) {
+        super(occurrence.getCharacter(), occurrence.getOccurrence());
     }
 
-    //
-    // Fields for methods implementation.
-    //
-    protected char the_character;
-    protected double the_occurrence;
+    /**
+     * Returns its id in BST.
+     *
+     * @return a String id
+     */
+    public String getID() {
+        return id;
+    }
+
+    /**
+     * Returns its id, but using byte.
+     *
+     * @return a byte id
+     */
+    public byte getByte() {
+        return Byte.parseByte(id, 2);
+    }
+
+    /**
+     * Returns its byte id length - used for consolidating bytes
+     *
+     * @return an int length
+     */
+    public int getByteLength() {
+        return id.length();
+    }
+
+    /**
+     * ID in BST
+     */
+    public String id;
 }
