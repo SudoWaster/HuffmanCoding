@@ -126,7 +126,8 @@ public class HuffmanEncoder {
      *  8 bits for a total number of characters
      *
      * and for every character:
-     *  8 bits for a character id length
+     *  8 bits for the character
+     *  8 bits for the character id length
      *
      * Characters with the same id length are on the same level in the tree.
      *
