@@ -124,9 +124,11 @@ public class HuffmanEncoder {
      *
      * It is a byte stream, which has a following form:
      *  8 bits for a total number of characters
+     *
      * and for every character:
-     *  8 bits for a character id length = n
-     *  n bits for the id
+     *  8 bits for a character id length
+     *
+     * Characters with the same id length are on the same level in the tree.
      *
      * @return a Byte array containing the dictionary
      */
@@ -151,7 +153,7 @@ public class HuffmanEncoder {
             //
             String charByte = "";
             String idLength = "";
-            String id = "";
+            //String id = "";
 
             if(character != null) {
                 //
@@ -159,7 +161,7 @@ public class HuffmanEncoder {
                 //
                 charByte = Integer.toBinaryString(character.getCharacter());
                 idLength = Integer.toBinaryString(character.getID().length());
-                id = character.getID();
+                //id = character.getID();
 
                 foundChars++;
             }
@@ -174,7 +176,7 @@ public class HuffmanEncoder {
             //
             // Add to dictionary stream
             //
-            dictionaryStream += charByte + idLength + id;
+            dictionaryStream += charByte + idLength; // + id;
         }
 
         //
