@@ -155,7 +155,7 @@ public class HuffmanEncoder {
                 buffer += "0";
             }
 
-            dictionary.add(Byte.parseByte(buffer, 2));
+            dictionary.add((byte) Integer.parseInt(buffer, 2));
         }
 
         return dictionary.toArray(new Byte[dictionary.size()]);

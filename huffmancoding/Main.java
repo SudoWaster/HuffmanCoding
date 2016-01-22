@@ -73,7 +73,14 @@ public class Main {
             result += (char)e.byteValue();
         }
 
-        System.out.println("\n    Input: " + input + "\n\n    Output: " + result + "\n");
+        Byte[] header = he.getDictionary();
+
+        String d = new String();
+        for(Byte e : header) {
+            d += (char)e.byteValue();
+        }
+
+        System.out.println("\n    Input: " + input + "\n\n    Output: " + result + "\n\n    Header: " + d + "\n");
         System.out.println((double)result.length()/input.length());
     }
 
