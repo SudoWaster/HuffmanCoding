@@ -170,9 +170,8 @@ public class HuffmanEncoder {
             //
             // Fill the byte for future parsing
             //
-            while(idLength.length() < 8 && idLength.length() != 0) {
-                idLength = "0" + idLength;
-            }
+            charByte = fillByte(charByte);
+            idLength = fillByte(idLength);
 
             //
             // Add to dictionary stream
@@ -183,8 +182,12 @@ public class HuffmanEncoder {
         //
         // Add a symbolic length info at the beginning
         //
-        dictionaryStream =
-                Integer.toBinaryString(foundChars) + dictionaryStream;
+        String foundCharsByte = Integer.toBinaryString(foundChars);
+        foundCharsByte = fillByte(foundCharsByte);
+
+        dictionaryStream = foundCharsByte + dictionaryStream;
+
+        System.out.println(dictionaryStream);
 
         // ---------------------------------------------------------------- //
 
@@ -217,6 +220,22 @@ public class HuffmanEncoder {
         // Return parsed byte array
         //
         return dictionary.toArray(new Byte[dictionary.size()]);
+    }
+
+    /**
+     * Fills a byte in String to be a full 8 characters
+     *
+     * @param binary a String with binary
+     * @return a full byte String representation
+     */
+    private String fillByte(String binary) {
+        String result = binary;
+
+        while(result.length() < 8 && result.length() != 0) {
+            result = "0" + result;
+        }
+
+        return result;
     }
 
     //
