@@ -30,6 +30,16 @@ import huffmancoding.Tree.HuffmanTree;
 public class HuffmanDecoder {
 
     /**
+     * Constructor for handled a joint stream - dictionary with text to decode
+     * 
+     * @param stream a Byte[] to fully decode
+     */
+    public HuffmanDecoder(Byte[] stream) {
+        initStream(stream);
+        createTree();
+    }
+
+    /**
      * Constructor for String dictionary byte stream.
      *
      * @param text a String to decode
@@ -54,20 +64,35 @@ public class HuffmanDecoder {
         //
         this.text = text;
 
+        initStream(dictionary);
+
+        createTree();
+    }
+
+    /**
+     * Converts Byte[] input stream to String and prepares for tree creation
+     *
+     * @param stream a Byte[] input
+     */
+    private void initStream(Byte[] stream) {
         //
         // Convert Byte[] to String
         //
-        String temp = new String();
-        for(Byte b : dictionary) {
-            temp += Integer.toBinaryString(b.byteValue());
+        String convertedDictionary = new String();
+        for(Byte b : stream) {
+            String temp = Integer.toBinaryString(b.byteValue());
+
+            while(temp.length() < 8) {
+                temp = "0" + temp;
+            }
+
+            convertedDictionary += temp;
         }
 
         //
         // Create a tree
         //
-        buffer = temp;
-
-        createTree();
+        buffer = convertedDictionary;
     }
 
     /**
@@ -87,9 +112,8 @@ public class HuffmanDecoder {
         //
         // Get the character amount and init CharacterOccurrecne array
         //
-        System.out.println(buffer);
         int characters = Integer.parseInt(cutByteFromBuffer(), 2);
-        System.out.println(characters);
+
         CharacterOccurrence[] occurrences = new CharacterOccurrence[characters];
 
         //
@@ -115,15 +139,17 @@ public class HuffmanDecoder {
         }
 
         //
+        // The leftover buffer is probably the input text
+        //
+        if(buffer.length() > 0) {
+            this.text = buffer;
+        }
+
+        //
         // Finally create the tree
         //
         tree = new HuffmanTree(occurrences);
         HuffmanTree.updateIDs(tree.root, "");
-
-        for(CharacterOccurrence e : occurrences) {
-            System.out.println(e.getCharacter() + " - " + e.getOccurrence() + " - " + tree.get(e.getCharacter()).getID());
-        }
-
     }
 
     /**
@@ -133,32 +159,50 @@ public class HuffmanDecoder {
      */
     public String getDecoded() {
         //
-        // TODO: Use the tree to decode
+        // Prepare result and a temporary stream
         //
         String result = new String();
-
         String byteStream = new String();
 
+        //
+        // Create the stream from input text
+        //
         for(char c : text.toCharArray()) {
-            byteStream += Integer.toBinaryString(c);
-        }
+            String currentByte = Integer.toBinaryString(c);
 
-        while(byteStream.length() > 0) {
-            String buffer = "";
-
-            HuffmanCharacter character = tree.get(buffer);
-
-            while(character == null && byteStream.length() > 0) {
-                buffer += byteStream.substring(0, 1);
-                byteStream = byteStream.substring(1);
-                //System.out.println(buffer);
+            while(currentByte.length() < 8) {
+                currentByte = "0" + currentByte;  // fill the byte
             }
 
+            byteStream += currentByte;
+        }
+
+        //
+        // Create a HuffmanCharacter result variable
+        //
+        HuffmanCharacter character = null;
+
+        while(character == null && byteStream.length() > 0) {
+            //
+            // Search for character by 1 bit
+            //
+            String characterBuffer = byteStream.substring(0, 1);
+            byteStream = byteStream.substring(1);
+
+            character = tree.get(characterBuffer);
+
+            //
+            // If found, add it to the result and reset searching
+            //
             if(character != null) {
                 result += character.getCharacter();
+                character = null;
             }
         }
 
+        //
+        // Finish decoding
+        //
         return result;
     }
 
@@ -169,21 +213,36 @@ public class HuffmanDecoder {
      * @return a cut byte (in String)
      */
     private String cutByteFromBuffer() {
+        //
+        // Check if we're not extending the byte buffer
+        //
         int length = 8;
 
         if(buffer.length() < 8) {
             length = buffer.length();
         }
-        
+
+        //
+        // Cut the byte
+        //
         String cutByte = buffer.substring(0, length);
         buffer = buffer.substring(length);
 
         return cutByte;
     }
 
+    //
+    // Input text objects
+    //
     public HuffmanTree tree;
 
+    //
+    // Input String to decode
+    //
     protected String text;
 
+    //
+    // Buffer used for tree creation from the dictionary
+    //
     private String buffer;
 }
