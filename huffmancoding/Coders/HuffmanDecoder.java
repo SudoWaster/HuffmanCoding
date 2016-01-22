@@ -37,7 +37,9 @@ public class HuffmanDecoder {
      */
     public HuffmanDecoder(String text, String dictionary) {
         this.text = text;
-        createTree(dictionary);
+
+        buffer = dictionary;
+        createTree();
     }
 
     /**
@@ -60,7 +62,12 @@ public class HuffmanDecoder {
             temp += Integer.toBinaryString(b.byteValue());
         }
 
-        createTree(temp);
+        //
+        // Create a tree
+        //
+        buffer = temp;
+
+        createTree();
     }
 
     /**
@@ -76,15 +83,11 @@ public class HuffmanDecoder {
      *
      * @param dictionary a dictionary (header) String on which the tree is based
      */
-    private void createTree(String dictionary) {
-        //
-        // Init an original dictionary instance buffer
-        //
-        buffer = dictionary;
-
+    private void createTree() {
         //
         // Get the character amount and init CharacterOccurrecne array
         //
+        System.out.println(buffer);
         int characters = Integer.parseInt(cutByteFromBuffer(), 2);
         System.out.println(characters);
         CharacterOccurrence[] occurrences = new CharacterOccurrence[characters];

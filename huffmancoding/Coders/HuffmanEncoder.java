@@ -187,8 +187,6 @@ public class HuffmanEncoder {
 
         dictionaryStream = foundCharsByte + dictionaryStream;
 
-        System.out.println(dictionaryStream);
-
         // ---------------------------------------------------------------- //
 
         //
@@ -196,7 +194,7 @@ public class HuffmanEncoder {
         //
         ArrayList<Byte> dictionary = new ArrayList<Byte>();
 
-        while(dictionaryStream.length() > 8) {
+        while(dictionaryStream.length() > 0) {
             //
             // Cut out a byte
             //
