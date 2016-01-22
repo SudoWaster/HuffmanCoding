@@ -103,6 +103,11 @@ public class HuffmanEncoder {
         // Don't forget the leftovers
         //
         if(leftover.length() > 0) {
+
+            while(leftover.length() < 8) {
+                leftover += "0";    // Shift left
+            }
+
             bytelist.add(Byte.parseByte(leftover, 2));
         }
 
@@ -120,7 +125,40 @@ public class HuffmanEncoder {
         //      for the id. It should utilize at least 256 bytes for every
         //      ASCII character (length, id, length, id, length, id etc.)
         //
-        return null;
+        String dictionaryHeader = new String();
+
+        for(int i = 0; i < 256; i++) {
+            HuffmanCharacter character = tree.get((char) i);
+
+            String idLength = "";
+            String id = "";
+
+            if(character != null) {
+                idLength = Integer.toBinaryString(character.getID().length());
+                id = character.getID();
+            }
+
+            while(idLength.length() < 8) {
+                idLength = "0" + idLength;
+            }
+
+            dictionaryHeader += idLength + id;
+        }
+
+        ArrayList<Byte> dictionary = new ArrayList<Byte>();
+
+        while(dictionaryHeader.length() > 8) {
+            String buffer = dictionaryHeader.substring(0, 8);
+            dictionaryHeader = dictionaryHeader.substring(8);
+
+            while(buffer.length() < 8) {
+                buffer += "0";
+            }
+
+            dictionary.add(Byte.parseByte(buffer, 2));
+        }
+
+        return dictionary.toArray(new Byte[dictionary.size()]);
     }
 
     //
