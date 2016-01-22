@@ -18,10 +18,56 @@
 
 package huffmancoding.Coders;
 
+import huffmancoding.TextTools.CharacterOccurrence;
+import huffmancoding.Tree.HuffmanTree;
+
 /**
  *
  * @author cezary
  */
 public class HuffmanDecoder {
 
+
+    public HuffmanDecoder(String text, String dictionary) {
+        this.text = text;
+    }
+
+    public HuffmanDecoder(String text, Byte[] dictionary) {
+        String temp = new String();
+        for(Byte b : dictionary) {
+            temp += Integer.toBinaryString(b.byteValue());
+        }
+
+        this.text = text;
+    }
+
+    private void createTree(String dictionary) {
+        String header = dictionary;
+
+        int characters = Integer.parseInt(cutByteFrom(header), 2);
+
+        CharacterOccurrence[] occurrences = new CharacterOccurrence[characters];
+
+        for(int i = 0; i < characters; i++) {
+            char currentChar = (char) Integer.parseInt(cutByteFrom(header), 2);
+
+            double frequency =
+                    (double) Integer.parseInt(cutByteFrom(header), 2) / characters;
+
+            occurrences[i] = new CharacterOccurrence(currentChar, frequency);
+        }
+
+        tree = new HuffmanTree(occurrences);
+    }
+
+    private String cutByteFrom(String buffor) {
+        String bufforByte = buffor.substring(0, 8);
+        buffor = buffor.substring(8);
+
+        return bufforByte;
+    }
+
+    public HuffmanTree tree;
+
+    protected String text;
 }
