@@ -118,46 +118,101 @@ public class HuffmanEncoder {
     }
 
 
+    /**
+     * Returns a dictionary of used characters and their id for future use.
+     * Thought to be parsed and small for many characters.
+     *
+     * It is a byte stream, which has a following form:
+     *  8 bits for a total number of characters
+     * and for every character:
+     *  8 bits for a character id length = n
+     *  n bits for the id
+     *
+     * @return a Byte array containing the dictionary
+     */
     public Byte[] getDictionary() {
         //
-        // TODO: Make a method returning a byte array for dictionary headers.
-        //      Should use a byte for the id length and a following space
-        //      for the id. It should utilize at least 256 bytes for every
-        //      ASCII character (length, id, length, id, length, id etc.)
+        // Create our String buffer and our character amount info
         //
-        String dictionaryHeader = new String();
+        String dictionaryStream = new String();
+        int foundChars = 0;
 
+        //
+        // Search for used symbols
+        //
         for(int i = 0; i < 256; i++) {
+            //
+            // Get the character info
+            //
             HuffmanCharacter character = tree.get((char) i);
 
+            //
+            // Prepare our character information for the dictionary
+            //
+            String charByte = "";
             String idLength = "";
             String id = "";
 
             if(character != null) {
+                //
+                // If character is found, set up the info
+                //
+                charByte = Integer.toBinaryString(character.getCharacter());
                 idLength = Integer.toBinaryString(character.getID().length());
                 id = character.getID();
+
+                foundChars++;
             }
 
-            while(idLength.length() < 8) {
+            //
+            // Fill the byte for future parsing
+            //
+            while(idLength.length() < 8 && idLength.length() != 0) {
                 idLength = "0" + idLength;
             }
 
-            dictionaryHeader += idLength + id;
+            //
+            // Add to dictionary stream
+            //
+            dictionaryStream += charByte + idLength + id;
         }
 
+        //
+        // Add a symbolic length info at the beginning
+        //
+        dictionaryStream =
+                Integer.toBinaryString(foundChars) + dictionaryStream;
+
+        // ---------------------------------------------------------------- //
+
+        //
+        // Start parsing to byte array
+        //
         ArrayList<Byte> dictionary = new ArrayList<Byte>();
 
-        while(dictionaryHeader.length() > 8) {
-            String buffer = dictionaryHeader.substring(0, 8);
-            dictionaryHeader = dictionaryHeader.substring(8);
+        while(dictionaryStream.length() > 8) {
+            //
+            // Cut out a byte
+            //
+            String buffer = dictionaryStream.substring(0, 8);
+            dictionaryStream = dictionaryStream.substring(8);
 
+            //
+            // Fill it if needed
+            //
             while(buffer.length() < 8) {
                 buffer += "0";
             }
 
+            //
+            // Parse to array
+            //
             dictionary.add((byte) Integer.parseInt(buffer, 2));
         }
 
+        //
+        // Return parsed byte array
+        //
         return dictionary.toArray(new Byte[dictionary.size()]);
     }
 
