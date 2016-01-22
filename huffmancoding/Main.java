@@ -35,12 +35,13 @@ public class Main {
      */
     public static void main(String[] args) {
 
-//        String input = "Copyright C Cezary Regec SudoWaster " +
-//            "This program is free software you can redistribute it andor modify it under the terms of the GNU General Public License as published by the Free Software Foundation either version of the License or at your option any later version " +
-//            "This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE  See the GNU General Public License for more details " +
-//            "You should have received a copy of the GNU General Public License along with this program if not write to the Free Software Foundation Inc Temple Place Suite Boston MA USA";
+        String input = "Copyright C Cezary Regec SudoWaster " +
+            "This program is free software you can redistribute it andor modify it under the terms of the GNU General Public License as published by the Free Software Foundation either version of the License or at your option any later version " +
+            "This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE  See the GNU General Public License for more details " +
+            "You should have received a copy of the GNU General Public License along with this program if not write to the Free Software Foundation Inc Temple Place Suite Boston MA USA";
 
-        String input = "kamionka village";
+        input += input;
+        //String input = "kamionka village";
         //
         // Test occurrence count, sorting and tree creation
         //
@@ -80,8 +81,13 @@ public class Main {
             d += (char)e.byteValue();
         }
 
-        System.out.println("\n    Input: " + input + "\n\n    Output: " + result + "\n\n    Header: " + d + "\n");
+        System.out.println("\n    Input (" + input.length() + "): " + input +
+                "\n\n    Output (" + result.length() + "): " + result +
+                "\n\n    Header(" + d.length() + "): " + d + "\n");
+
         System.out.println((double)result.length()/input.length());
+
+        System.out.println((double)(result.length() + d.length()) / input.length());
     }
 
 }
