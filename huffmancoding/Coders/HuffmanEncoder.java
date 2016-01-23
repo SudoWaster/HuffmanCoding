@@ -72,8 +72,9 @@ public class HuffmanEncoder {
             // Get current character corresponding object and id
             //
             HuffmanCharacter currentCharacter = tree.get(text.charAt(i));
-
+            System.out.println(text.charAt(i));
             collectiveBuffer += currentCharacter.getID();
+            System.out.println(collectiveBuffer);
 
             //
             // Make sure we do not extend the byte
@@ -154,7 +155,6 @@ public class HuffmanEncoder {
             //
             String charByte = "";
             String idLength = "";
-            //String id = "";
 
             if(character != null) {
                 //
@@ -162,7 +162,6 @@ public class HuffmanEncoder {
                 //
                 charByte = Integer.toBinaryString(character.getCharacter());
                 idLength = Integer.toBinaryString(character.getID().length());
-                //id = character.getID();
 
                 foundChars++;
             }

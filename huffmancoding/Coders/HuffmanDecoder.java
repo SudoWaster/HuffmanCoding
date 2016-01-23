@@ -45,7 +45,7 @@ public class HuffmanDecoder {
      * @param text a String to decode
      * @param dictionary a String byte stream of dictionary
      */
-    public HuffmanDecoder(String text, String dictionary) {
+    public HuffmanDecoder(Byte[] text, String dictionary) {
         this.text = text;
 
         buffer = dictionary;
@@ -58,7 +58,7 @@ public class HuffmanDecoder {
      * @param text a String to decode
      * @param dictionary a Byte[] stream of dictionary
      */
-    public HuffmanDecoder(String text, Byte[] dictionary) {
+    public HuffmanDecoder(Byte[] text, Byte[] dictionary) {
         //
         // Save the text to decode
         //
@@ -129,8 +129,7 @@ public class HuffmanDecoder {
             // Calculate a virtual frequency of occurrence
             //
             double frequency =
-                    (double) Integer.parseInt(cutByteFromBuffer(), 2)
-                        / characters;
+                    characters - Integer.parseInt(cutByteFromBuffer(), 2);
 
             //
             // Add to occurrences array
@@ -142,7 +141,7 @@ public class HuffmanDecoder {
         // The leftover buffer is probably the input text
         //
         if(buffer.length() > 0) {
-            this.text = buffer;
+            //this.text = buffer;
         }
 
         //
@@ -150,6 +149,10 @@ public class HuffmanDecoder {
         //
         tree = new HuffmanTree(occurrences);
         HuffmanTree.updateIDs(tree.root, "");
+
+        for(CharacterOccurrence e : occurrences) {
+            System.out.println(e.getCharacter() + " - " + e.getOccurrence() + " - " + tree.get(e.getCharacter()).getID());
+        }
     }
 
     /**
@@ -167,8 +170,9 @@ public class HuffmanDecoder {
         //
         // Create the stream from input text
         //
-        for(char c : text.toCharArray()) {
-            String currentByte = Integer.toBinaryString(c);
+        for(Byte b : text) {
+            String currentByte = String.format("%8s",
+                    Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
 
             while(currentByte.length() < 8) {
                 currentByte = "0" + currentByte;  // fill the byte
@@ -178,15 +182,16 @@ public class HuffmanDecoder {
         }
 
         //
-        // Create a HuffmanCharacter result variable
+        // Create a HuffmanCharacter result variable and a temporary buffer
         //
         HuffmanCharacter character = null;
+        String characterBuffer = "";
 
         while(character == null && byteStream.length() > 0) {
             //
             // Search for character by 1 bit
             //
-            String characterBuffer = byteStream.substring(0, 1);
+            characterBuffer += byteStream.substring(0, 1);
             byteStream = byteStream.substring(1);
 
             character = tree.get(characterBuffer);
@@ -197,6 +202,7 @@ public class HuffmanDecoder {
             if(character != null) {
                 result += character.getCharacter();
                 character = null;
+                characterBuffer = "";
             }
         }
 
@@ -237,9 +243,9 @@ public class HuffmanDecoder {
     public HuffmanTree tree;
 
     //
-    // Input String to decode
+    // Input Byte[] to decode
     //
-    protected String text;
+    protected Byte[] text;
 
     //
     // Buffer used for tree creation from the dictionary
