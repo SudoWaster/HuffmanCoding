@@ -22,6 +22,7 @@ import huffmancoding.TextTools.CharacterOccurrence;
 import huffmancoding.TextTools.HuffmanCharacter;
 import huffmancoding.TextTools.Interfaces.OccurrenceIndex;
 import huffmancoding.TextTools.Occurrence;
+import java.util.ArrayList;
 
 /**
  * A simple Huffman tree implementation.
@@ -65,6 +66,7 @@ public class HuffmanTree {
      */
     public HuffmanTree() {
         this.root = new HuffmanNode();
+        this.originalOccurrences = new ArrayList<CharacterOccurrence>();
     }
 
     /**
@@ -91,6 +93,11 @@ public class HuffmanTree {
      * @param element a CharacterOccurrence element to insert
      */
     public void insert(CharacterOccurrence element) {
+        //
+        // Save for later
+        //
+        this.originalOccurrences.add(element);
+
         //
         // Prepare a node to insert
         //
@@ -192,6 +199,28 @@ public class HuffmanTree {
         parent.setNode(nodeSide, element);
     }
 
+    /**
+     * Get all CharacterOccurrences in the order of insertion.
+     *
+     * @return a HuffmanCharacter array with ids
+     */
+    public HuffmanCharacter[] getAll() {
+        //
+        // Init result array
+        //
+        HuffmanCharacter[] result =
+                new HuffmanCharacter[originalOccurrences.size()];
+
+        for(int i = 0; i < result.length; i++) {
+            //
+            // Search for every character id - add full info to array
+            //
+            CharacterOccurrence currentChar = originalOccurrences.get(i);
+            result[i] = get(currentChar.getCharacter());
+        }
+        
+        return result;
+    }
 
     /**
      * Search and return CharacterOccurrence from the tree basing on a character
@@ -340,4 +369,9 @@ public class HuffmanTree {
      * 
      */
     public HuffmanNode root;
+
+    //
+    // Original occurrences for tree recreation
+    //
+    private ArrayList<CharacterOccurrence> originalOccurrences;
 }

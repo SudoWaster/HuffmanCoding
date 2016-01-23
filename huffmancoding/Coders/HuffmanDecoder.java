@@ -149,10 +149,6 @@ public class HuffmanDecoder {
         //
         tree = new HuffmanTree(occurrences);
         HuffmanTree.updateIDs(tree.root, "");
-
-        for(CharacterOccurrence e : occurrences) {
-            System.out.println(e.getCharacter() + " - " + e.getOccurrence() + " - " + tree.get(e.getCharacter()).getID());
-        }
     }
 
     /**

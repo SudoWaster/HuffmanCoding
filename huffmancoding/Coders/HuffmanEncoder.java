@@ -72,9 +72,7 @@ public class HuffmanEncoder {
             // Get current character corresponding object and id
             //
             HuffmanCharacter currentCharacter = tree.get(text.charAt(i));
-            System.out.println(text.charAt(i));
             collectiveBuffer += currentCharacter.getID();
-            System.out.println(collectiveBuffer);
 
             //
             // Make sure we do not extend the byte
@@ -136,19 +134,23 @@ public class HuffmanEncoder {
      */
     public Byte[] getDictionary() {
         //
-        // Create our String buffer and our character amount info
+        // Get the chars
         //
-        String dictionaryStream = new String();
-        int foundChars = 0;
+        HuffmanCharacter[] characters = tree.getAll();
+        
+        //
+        // Create a String byte stream with symbolic length info
+        // at the beginning.
+        //
+        String foundCharsByte = Integer.toBinaryString(characters.length);
+        foundCharsByte = fillByte(foundCharsByte);
+
+        String dictionaryStream = foundCharsByte;
 
         //
-        // Search for used symbols
+        // Iterate throgh used characters
         //
-        for(int i = 0; i < 256; i++) {
-            //
-            // Get the character info
-            //
-            HuffmanCharacter character = tree.get((char) i);
+        for(HuffmanCharacter character : characters) {
 
             //
             // Prepare our character information for the dictionary
@@ -160,10 +162,8 @@ public class HuffmanEncoder {
                 //
                 // If character is found, set up the info
                 //
-                charByte = Integer.toBinaryString(character.getCharacter());
-                idLength = Integer.toBinaryString(character.getID().length());
-
-                foundChars++;
+                charByte = Integer.toBinaryString((short) character.getCharacter());
+                idLength = Integer.toBinaryString((short) character.getID().length());
             }
 
             //
@@ -175,16 +175,8 @@ public class HuffmanEncoder {
             //
             // Add to dictionary stream
             //
-            dictionaryStream += charByte + idLength; // + id;
+            dictionaryStream += charByte + idLength;
         }
-
-        //
-        // Add a symbolic length info at the beginning
-        //
-        String foundCharsByte = Integer.toBinaryString(foundChars);
-        foundCharsByte = fillByte(foundCharsByte);
-
-        dictionaryStream = foundCharsByte + dictionaryStream;
 
         // ---------------------------------------------------------------- //
 
