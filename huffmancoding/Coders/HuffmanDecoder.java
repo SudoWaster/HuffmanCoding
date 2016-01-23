@@ -21,6 +21,7 @@ package huffmancoding.Coders;
 import huffmancoding.TextTools.CharacterOccurrence;
 import huffmancoding.TextTools.HuffmanCharacter;
 import huffmancoding.Tree.HuffmanTree;
+import java.util.ArrayList;
 
 /**
  * A decoder class implementation for Huffman coding
@@ -33,8 +34,10 @@ public class HuffmanDecoder {
      * Constructor for handled a joint stream - dictionary with text to decode
      * 
      * @param stream a Byte[] to fully decode
+     * @param isUnicode a boolean determining character encoding
      */
-    public HuffmanDecoder(Byte[] stream) {
+    public HuffmanDecoder(Byte[] stream, boolean isUnicode) {
+        this.isUnicode = isUnicode;
         initStream(stream);
         createTree();
     }
@@ -46,10 +49,7 @@ public class HuffmanDecoder {
      * @param dictionary a String byte stream of dictionary
      */
     public HuffmanDecoder(Byte[] text, String dictionary) {
-        this.text = text;
-
-        buffer = dictionary;
-        createTree();
+        this(text, dictionary, true);
     }
 
     /**
@@ -57,15 +57,27 @@ public class HuffmanDecoder {
      *
      * @param text a String to decode
      * @param dictionary a Byte[] stream of dictionary
+     * @param isUnicode a boolean determining character encoding
      */
-    public HuffmanDecoder(Byte[] text, Byte[] dictionary) {
-        //
-        // Save the text to decode
-        //
+    public HuffmanDecoder(Byte[] text, Byte[] dictionary, boolean isUnicode) {
         this.text = text;
+        this.isUnicode = isUnicode;
 
         initStream(dictionary);
+        createTree();
+    }
 
+    /**
+     * Constructor for Byte array byte stream.
+     *
+     * @param text a String to decode
+     * @param dictionary a String stream of dictionary
+     * @param isUnicode a boolean determining character encoding
+     */
+    public HuffmanDecoder(Byte[] text, String dictionary, boolean isUnicode) {
+        this.text = text;
+
+        this.buffer = dictionary;
         createTree();
     }
 
@@ -85,7 +97,7 @@ public class HuffmanDecoder {
             while(temp.length() < 8) {
                 temp = "0" + temp;
             }
-
+            
             convertedDictionary += temp;
         }
 
@@ -149,6 +161,10 @@ public class HuffmanDecoder {
         //
         tree = new HuffmanTree(occurrences);
         HuffmanTree.updateIDs(tree.root, "");
+
+        for(CharacterOccurrence e : occurrences) {
+            System.out.println(e.getCharacter() + " - " + e.getOccurrence() + " - " + tree.get(e.getCharacter()).getID());
+        }
     }
 
     /**
@@ -178,8 +194,53 @@ public class HuffmanDecoder {
         }
 
         //
+        // Decode byte stream to character array
+        //
+        Character[] characters = getDecodedChars(byteStream);
+
+        int i = 0;
+        while(i < characters.length) {
+            char currentCharacter = characters[i].charValue();
+            System.out.println("Original: " + (int) currentCharacter);
+
+            if(isUnicode) {
+                //
+                // If unicode, shift left and add another byte char
+                //
+                currentCharacter *= 256;
+                currentCharacter += characters[i+1].charValue();
+                i++;
+            }
+
+            //
+            // Add char to result String
+            //
+            result += currentCharacter;
+            System.out.println((int) currentCharacter);
+            i++;
+        }
+
+
+        //
+        // Finish decoding
+        //
+        return result;
+    }
+
+    /**
+     * Decode a stream as a Character array
+     *
+     * @param byteStream an input bytestream as a String
+     * @return a decoded Character array
+     */
+    public Character[] getDecodedChars(String stream) {
+
+        ArrayList<Character> result = new ArrayList<Character>();
+
+        //
         // Create a HuffmanCharacter result variable and a temporary buffer
         //
+        String byteStream = new String(stream.toCharArray());
         HuffmanCharacter character = null;
         String characterBuffer = "";
 
@@ -190,22 +251,25 @@ public class HuffmanDecoder {
             characterBuffer += byteStream.substring(0, 1);
             byteStream = byteStream.substring(1);
 
+            System.out.println(characterBuffer);
+
             character = tree.get(characterBuffer);
 
+            //System.out.println(character.getID() + " " + (int)character.getCharacter());
             //
             // If found, add it to the result and reset searching
             //
             if(character != null) {
-                result += character.getCharacter();
+                result.add(character.getCharacter());
                 character = null;
                 characterBuffer = "";
             }
         }
 
         //
-        // Finish decoding
+        // Return resulting array
         //
-        return result;
+        return result.toArray(new Character[result.size()]);
     }
 
     /**
@@ -242,6 +306,11 @@ public class HuffmanDecoder {
     // Input Byte[] to decode
     //
     protected Byte[] text;
+
+    //
+    // Determine if unicode is used
+    //
+    protected boolean isUnicode;
 
     //
     // Buffer used for tree creation from the dictionary

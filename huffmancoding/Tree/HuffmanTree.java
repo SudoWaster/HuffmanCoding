@@ -105,7 +105,7 @@ public class HuffmanTree {
 
         if(root.isLeaf()) {
             //
-            // If root's a leaf, plant the tree.
+            // If the root's a leaf, plant the tree.
             //
             root.setNode(NODE.LEFT.getValue(), newNode);
 
@@ -239,7 +239,7 @@ public class HuffmanTree {
      * @return a corresponding CharacterOccurrence
      */
     public HuffmanCharacter get(String id) {
-        return get(root, '\0', id);
+        return get(root, '\n', id);
     }
 
     /**

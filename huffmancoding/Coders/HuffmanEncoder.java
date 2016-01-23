@@ -31,13 +31,25 @@ import java.util.ArrayList;
 public class HuffmanEncoder {
 
     /**
-     * Init class with text - count characters and make a tree
+     * Init class with text - count characters and make a tree with default
+     * unicode on
      *
      * @param text a String with input
      */
     public HuffmanEncoder(String text) {
+        this(text, true);
+    }
+
+    /**
+     * Init class with text - count characters and make a tree and determine
+     * unicode setting
+     *
+     * @param text a String with input
+     */
+    public HuffmanEncoder(String text, boolean isUnicode) {
         this.text = text;
-        this.counter = new OccurrenceCounter(text);
+        this.isUnicode = isUnicode;
+        this.counter = new OccurrenceCounter(text, isUnicode);
         this.tree = new HuffmanTree(counter.getFullOccurrence());
     }
 
@@ -69,10 +81,34 @@ public class HuffmanEncoder {
             String collectiveBuffer = leftover;
 
             //
-            // Get current character corresponding object and id
+            // Init character bytes
             //
-            HuffmanCharacter currentCharacter = tree.get(text.charAt(i));
-            collectiveBuffer += currentCharacter.getID();
+            HuffmanCharacter leftCharacter = null;
+            HuffmanCharacter rightCharacter = null;
+
+            char currentChar = text.charAt(i);
+
+            //
+            // Get HuffmanCharacters
+            //
+            if(isUnicode) {
+                //
+                // If unicode, cut left byte
+                //
+                char leftChar = (char) (currentChar / 256);
+                currentChar -= leftChar * 256;
+
+                //
+                // Add left side to buffer
+                //
+                leftCharacter = tree.get(leftChar);
+                collectiveBuffer += leftCharacter.getID();
+            }
+            //
+            // Add right side to buffer
+            //
+            rightCharacter = tree.get(currentChar);
+            collectiveBuffer += rightCharacter.getID();
 
             //
             // Make sure we do not extend the byte
@@ -107,7 +143,7 @@ public class HuffmanEncoder {
                 leftover += "0";    // Shift left
             }
 
-            bytelist.add(Byte.parseByte(leftover, 2));
+            bytelist.add((byte) Integer.parseInt(leftover, 2));
         }
 
         //
@@ -157,13 +193,13 @@ public class HuffmanEncoder {
             //
             String charByte = "";
             String idLength = "";
-
+            
             if(character != null) {
                 //
                 // If character is found, set up the info
                 //
-                charByte = Integer.toBinaryString((short) character.getCharacter());
-                idLength = Integer.toBinaryString((short) character.getID().length());
+                charByte = Integer.toBinaryString(character.getCharacter());
+                idLength = Integer.toBinaryString(character.getID().length());
             }
 
             //
@@ -189,8 +225,11 @@ public class HuffmanEncoder {
             //
             // Cut out a byte
             //
-            String buffer = dictionaryStream.substring(0, 8);
-            dictionaryStream = dictionaryStream.substring(8);
+            int bytelength = dictionaryStream.length() < 8 ?
+                dictionaryStream.length() : 8;
+
+            String buffer = dictionaryStream.substring(0, bytelength);
+            dictionaryStream = dictionaryStream.substring(bytelength);
 
             //
             // Fill it if needed
@@ -237,5 +276,5 @@ public class HuffmanEncoder {
     // The input string
     //
     protected String text;
-    
+    protected boolean isUnicode;
 }

@@ -36,17 +36,18 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        String input = "Copyright C Cezary Regec SudoWaster " +
-            "This program is free software you can redistribute it andor modify it under the terms of the GNU General Public License as published by the Free Software Foundation either version of the License or at your option any later version " +
-            "This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE  See the GNU General Public License for more details " +
-            "You should have received a copy of the GNU General Public License along with this program if not write to the Free Software Foundation Inc Temple Place Suite Boston MA USA";
+        boolean isUnicode = true;
+//        String input = "Copyright C Cezary Regec SudoWaster " +
+//            "This program is free software you can redistribute it andor modify it under the terms of the GNU General Public License as published by the Free Software Foundation either version of the License or at your option any later version " +
+//            "This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE  See the GNU General Public License for more details " +
+//            "You should have received a copy of the GNU General Public License along with this program if not write to the Free Software Foundation Inc Temple Place Suite Boston MA USA";
 
-        input += input;
-//        String input = "aaaa";
+//        input += input;
+        String input = "łąka";
         //
         // Test occurrence count, sorting and tree creation
         //
-        OccurrenceCounter c = new OccurrenceCounter(input);
+        OccurrenceCounter c = new OccurrenceCounter(input, isUnicode);
         CharacterOccurrence[] o = c.getFullOccurrence();
         Occurrence.sort(o);
         HuffmanTree tree = new HuffmanTree();
@@ -67,7 +68,7 @@ public class Main {
         //
         // Test encoding
         //
-        HuffmanEncoder he = new HuffmanEncoder(input);
+        HuffmanEncoder he = new HuffmanEncoder(input, isUnicode);
         Byte[] encoded = he.getEncoded();
 
         String result = new String();
@@ -82,7 +83,7 @@ public class Main {
             d += (char)e.byteValue();
         }
 
-        System.out.println("\n    Input (" + input.length() + "): " + input +
+        System.out.println("\n    Input (" + (isUnicode ? input.length() *2 : input.length()) + "): " + input +
                 "\n\n    Output (" + result.length() + "): " + result +
                 "\n\n    Header(" + d.length() + "): " + d + "\n");
 
@@ -93,7 +94,7 @@ public class Main {
         //
         // Decoder test
         //
-        HuffmanDecoder de = new HuffmanDecoder(encoded, header);
+        HuffmanDecoder de = new HuffmanDecoder(encoded, header, isUnicode);
         System.out.println("\n" + de.getDecoded());
     }
 

@@ -36,7 +36,7 @@ public class OccurrenceCounter {
      * @param txt a String that we'll be counting characters of
      */
     public OccurrenceCounter(String txt) {
-        this.text = txt;
+        this(txt, true);
     }
 
     /**
@@ -46,8 +46,31 @@ public class OccurrenceCounter {
      * characters of
      */
     public OccurrenceCounter(char[] txt) {
-        this.text = String.valueOf(txt);
+        this(String.valueOf(txt));
     }
+
+    /**
+     * Init fields with a char array (convert it) and determine if unicode.
+     *
+     * @param txt a char array converted to a String we'll be counting
+     * characters of
+     * @param isUnicode a boolean determining unicode
+     */
+    public OccurrenceCounter(char[] txt, boolean isUnicode) {
+        this(String.valueOf(txt), isUnicode);
+    }
+
+    /**
+     * Init fields with a String and determine if unicode
+     *
+     * @param txt a String that we'll be counting characters of
+     * @param isUnicode a boolean determining unicode
+     */
+    public OccurrenceCounter(String txt, boolean isUnicode) {
+        this.text = txt;
+        this.isUnicode = isUnicode;
+    }
+
 
     /**
      * Calls for counting and returns occurrence of every Character in a String.
@@ -85,7 +108,6 @@ public class OccurrenceCounter {
 
                 return element;
             }
-
         }
 
         //
@@ -141,24 +163,49 @@ public class OccurrenceCounter {
         //
         for(int i = 0; i < this.length; i++) {
             //
-            // We need to know current char and new occurrence.
+            // We need to know current char
             //
             char currentChar = this.text.charAt(i);
-            int occurrenceNumber = 1;
 
+            //
+            // Split unicode characters
+            //
+            if(isUnicode) {
+                //
+                // Cut the first byte
+                //
+                char leftChar = (char) (currentChar / 256);
+                currentChar -= leftChar * 256;
 
-            if(dictionary.containsKey(currentChar)) {
-                //
-                // If it's already in HashMap, update the occurrence
-                //
-                occurrenceNumber = dictionary.get(currentChar) + 1;
+                addToDictionary(leftChar);
             }
 
-            //
-            // Put value under our char key
-            //
-            dictionary.put(currentChar, occurrenceNumber);
+            addToDictionary(currentChar);
         }
+    }
+
+    /**
+     * Adds a character to thr dictionary
+     *
+     * @param character a char to add (preferably max 256)
+     */
+    private void addToDictionary(char character) {
+        //
+        // Default occurrence number
+        //
+        int occurrenceNumber = 1;
+
+        if(dictionary.containsKey(character)) {
+            //
+            // If it's already in HashMap, update the occurrence
+            //
+            occurrenceNumber = dictionary.get(character) + 1;
+        }
+
+        //
+        // Put value under our char key
+        //
+        dictionary.put(character, occurrenceNumber);
     }
 
     /**
@@ -193,6 +240,10 @@ public class OccurrenceCounter {
             int occurrenceNumber = (Integer) dictionaryEntry.getValue();
             double frequency = (double) occurrenceNumber / length;
 
+            if(isUnicode) {
+                frequency /= 2;
+            }
+
             //
             // Add those values to array
             //
@@ -218,6 +269,8 @@ public class OccurrenceCounter {
     //
     private HashMap<Character, Integer> dictionary;
     private CharacterOccurrence[] occurrence;
+
+    private boolean isUnicode;
 
     //
     // Whether the String has been counted yet
