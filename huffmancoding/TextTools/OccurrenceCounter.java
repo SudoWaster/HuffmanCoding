@@ -36,7 +36,7 @@ public class OccurrenceCounter {
      * @param txt a String that we'll be counting characters of
      */
     public OccurrenceCounter(String txt) {
-        this(txt, true);
+        this.text = txt;
     }
 
     /**
@@ -48,29 +48,6 @@ public class OccurrenceCounter {
     public OccurrenceCounter(char[] txt) {
         this(String.valueOf(txt));
     }
-
-    /**
-     * Init fields with a char array (convert it) and determine if unicode.
-     *
-     * @param txt a char array converted to a String we'll be counting
-     * characters of
-     * @param isUnicode a boolean determining unicode
-     */
-    public OccurrenceCounter(char[] txt, boolean isUnicode) {
-        this(String.valueOf(txt), isUnicode);
-    }
-
-    /**
-     * Init fields with a String and determine if unicode
-     *
-     * @param txt a String that we'll be counting characters of
-     * @param isUnicode a boolean determining unicode
-     */
-    public OccurrenceCounter(String txt, boolean isUnicode) {
-        this.text = txt;
-        this.isUnicode = isUnicode;
-    }
-
 
     /**
      * Calls for counting and returns occurrence of every Character in a String.

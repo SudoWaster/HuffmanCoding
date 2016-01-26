@@ -49,7 +49,7 @@ public class HuffmanEncoder {
     public HuffmanEncoder(String text, boolean isUnicode) {
         this.text = text;
         this.isUnicode = isUnicode;
-        this.counter = new OccurrenceCounter(text, isUnicode);
+        this.counter = new OccurrenceCounter(text);
         this.tree = new HuffmanTree(counter.getFullOccurrence());
     }
 
@@ -83,32 +83,15 @@ public class HuffmanEncoder {
             //
             // Init character bytes
             //
-            HuffmanCharacter leftCharacter = null;
-            HuffmanCharacter rightCharacter = null;
+            HuffmanCharacter currentCharacter = null;
 
             char currentChar = text.charAt(i);
 
             //
-            // Get HuffmanCharacters
+            // Add to buffer
             //
-            if(isUnicode) {
-                //
-                // If unicode, cut left byte
-                //
-                char leftChar = (char) (currentChar / 256);
-                currentChar -= leftChar * 256;
-
-                //
-                // Add left side to buffer
-                //
-                leftCharacter = tree.get(leftChar);
-                collectiveBuffer += leftCharacter.getID();
-            }
-            //
-            // Add right side to buffer
-            //
-            rightCharacter = tree.get(currentChar);
-            collectiveBuffer += rightCharacter.getID();
+            currentCharacter = tree.get(currentChar);
+            collectiveBuffer += currentCharacter.getID();
 
             //
             // Make sure we do not extend the byte
@@ -179,7 +162,7 @@ public class HuffmanEncoder {
         // at the beginning.
         //
         String foundCharsByte = Integer.toBinaryString(characters.length);
-        foundCharsByte = fillByte(foundCharsByte);
+        foundCharsByte = fillByte(foundCharsByte, isUnicode);
 
         String dictionaryStream = foundCharsByte;
 
@@ -205,8 +188,8 @@ public class HuffmanEncoder {
             //
             // Fill the byte for future parsing
             //
-            charByte = fillByte(charByte);
-            idLength = fillByte(idLength);
+            charByte = fillByte(charByte, isUnicode);
+            idLength = fillByte(idLength, false);
 
             //
             // Add to dictionary stream
@@ -256,10 +239,12 @@ public class HuffmanEncoder {
      * @param binary a String with binary
      * @return a full byte String representation
      */
-    private String fillByte(String binary) {
+    private String fillByte(String binary, boolean isUnicode) {
         String result = binary;
 
-        while(result.length() < 8 && result.length() != 0) {
+        int bytelength = isUnicode ? 16 : 8;
+
+        while(result.length() < bytelength && result.length() != 0) {
             result = "0" + result;
         }
 

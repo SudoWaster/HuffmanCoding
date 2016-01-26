@@ -124,7 +124,7 @@ public class HuffmanDecoder {
         //
         // Get the character amount and init CharacterOccurrecne array
         //
-        int characters = Integer.parseInt(cutByteFromBuffer(), 2);
+        int characters = Integer.parseInt(cutCharBytesFromBuffer(), 2);
 
         CharacterOccurrence[] occurrences = new CharacterOccurrence[characters];
 
@@ -135,7 +135,7 @@ public class HuffmanDecoder {
             //
             // Get the char from the first byte
             //
-            char currentChar = (char) Integer.parseInt(cutByteFromBuffer(), 2);
+            char currentChar = (char) Integer.parseInt(cutCharBytesFromBuffer(), 2);
 
             //
             // Calculate a virtual frequency of occurrence
@@ -186,12 +186,9 @@ public class HuffmanDecoder {
             String currentByte = String.format("%8s",
                     Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
 
-            while(currentByte.length() < 8) {
-                currentByte = "0" + currentByte;  // fill the byte
-            }
-
             byteStream += currentByte;
         }
+
 
         //
         // Decode byte stream to character array
@@ -201,25 +198,13 @@ public class HuffmanDecoder {
         int i = 0;
         while(i < characters.length) {
             char currentCharacter = characters[i].charValue();
-            System.out.println("Original: " + (int) currentCharacter);
-
-            if(isUnicode) {
-                //
-                // If unicode, shift left and add another byte char
-                //
-                currentCharacter *= 256;
-                currentCharacter += characters[i+1].charValue();
-                i++;
-            }
 
             //
             // Add char to result String
             //
             result += currentCharacter;
-            System.out.println((int) currentCharacter);
             i++;
         }
-
 
         //
         // Finish decoding
@@ -251,11 +236,8 @@ public class HuffmanDecoder {
             characterBuffer += byteStream.substring(0, 1);
             byteStream = byteStream.substring(1);
 
-            System.out.println(characterBuffer);
-
             character = tree.get(characterBuffer);
 
-            //System.out.println(character.getID() + " " + (int)character.getCharacter());
             //
             // If found, add it to the result and reset searching
             //
@@ -270,6 +252,22 @@ public class HuffmanDecoder {
         // Return resulting array
         //
         return result.toArray(new Character[result.size()]);
+    }
+
+
+    /**
+     * Determine if using unicode and cut 2 bytes, otherwise only one.
+     * 
+     * @return cut bytes (in String)
+     */
+    private String cutCharBytesFromBuffer() {
+        String result = cutByteFromBuffer();
+
+        if(isUnicode) {
+            result += cutByteFromBuffer();
+        }
+
+        return result;
     }
 
     /**
